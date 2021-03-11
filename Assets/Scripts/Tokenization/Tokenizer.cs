@@ -8,13 +8,12 @@ namespace BASIC.Tokenization {
 
     public class Tokenizer {
         
-        public static readonly TokenType WHITESPACE = new TokenType("^( )");
-        public static readonly TokenType RELOP = new TokenType("^(<(>|=|ε)|>(=|ε)|=)");
+        public static readonly TokenType RELOP = new TokenType("^(<(>|=|ε)|>(=|ε)|=|<|>)");
         public static readonly TokenType NUMBER = new TokenType("^([0-9]+)");
         public static readonly TokenType VAR = new TokenType("^[A-Z]");
-        public static readonly TokenType BINOP = new TokenType("^(+|-|ε)");
-        public static readonly TokenType L_PAREN = new TokenType("^(");
-        public static readonly TokenType R_PAREN = new TokenType("^)");
+        public static readonly TokenType BINOP = new TokenType(@"^(\+|-|\*|/|ε)");
+        public static readonly TokenType L_PAREN = new TokenType(@"^\(");
+        public static readonly TokenType R_PAREN = new TokenType(@"^\)");
         public static readonly TokenType FUNC = new TokenType("^[A-Z][A-Z]+");
 
         
@@ -22,14 +21,13 @@ namespace BASIC.Tokenization {
         
 
         public static readonly TokenType[] tokenTypes = {
+            L_PAREN,
+            R_PAREN,
             FUNC,
-            WHITESPACE,
             VAR,
             NUMBER,
             RELOP,
-            BINOP,
-            L_PAREN,
-            R_PAREN
+            BINOP
         };
 
         public static Match Match(String input, TokenType tokenType) {
@@ -40,6 +38,7 @@ namespace BASIC.Tokenization {
             List<Token> tokens = new List<Token>();
             while (input != "") {
                 bool matched = false;
+                input = input.TrimStart(' ');
                 //Debug.Log("1: " + input);
                 for (int i = 0; i < tokenTypes.Length; i++) {
                     Match match = Regex.Match(input, tokenTypes[i].GetPattern());
@@ -59,13 +58,13 @@ namespace BASIC.Tokenization {
                 }
             }
 
-            String result = "";
+            /*String result = "";
 
             foreach (Token token in tokens) {
                 result += token.GetValue() + ", ";
             }
 
-            Debug.Log(result);
+            Debug.Log(result);*/
             return tokens;
         }
 
