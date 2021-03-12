@@ -12,6 +12,9 @@ public class Interpreter : MonoBehaviour {
     public SortedList<int, String> lines;
     public int curLine = 0;
 
+    [SerializeField]
+    private Display display;
+
     Parser parser;
 
     public Dictionary<String, int> variables;
@@ -29,33 +32,33 @@ public class Interpreter : MonoBehaviour {
 
         return -1;
     }
-
-    public int EvaluatePrimary(Stack<Token> tokens) {
-        Token token = tokens.Pop();
+    
+    public int EvaluatePrimary(Queue<Token> tokens) {
+        Token token = tokens.Dequeue();
         if (token.GetTokenType().Equals(Tokenizer.L_PAREN)) {
             int result = EvaluateExpression(tokens);
-            tokens.Pop();
+            tokens.Dequeue();
             return result;
         } else if (token.GetTokenType().Equals(Tokenizer.NUMBER)) {
             return int.Parse(token.GetValue());
         } else if (token.GetTokenType().Equals(Tokenizer.VAR)) {
             return variables[token.GetValue()];
         }
-
+        
         return 0;
     }
 
-    public int EvaluateExpression(Stack<Token> tokens) {
+    public int EvaluateExpression(Queue<Token> tokens) {
         return EvaluateExpression1(tokens, EvaluatePrimary(tokens), 0);
     }
 
-    public int EvaluateExpression1(Stack<Token> tokens, int lhs, int min_precedence) {
+    public int EvaluateExpression1(Queue<Token> tokens, int lhs, int min_precedence) {
         if (tokens.Count == 0) return lhs;
         Token lookahead = tokens.Peek();
         while (tokens.Count != 0 && GetPrecedence(lookahead.GetValue()) >= min_precedence) {
             String op = lookahead.GetValue();
             if (tokens.Count == 0) return lhs;
-            tokens.Pop();
+            tokens.Dequeue();
             int rhs = EvaluatePrimary(tokens);
 
             if (tokens.Count > 0) {
@@ -99,15 +102,15 @@ public class Interpreter : MonoBehaviour {
         }
     }
 
-    public void ExecuteStatement(Stack<Token> tokens) {
+    public void ExecuteStatement(Queue<Token> tokens) {
         //Debug.Log("test: " + tokens.Peek().GetValue());
-        switch (tokens.Pop().GetValue()) {
+        switch (tokens.Dequeue().GetValue()) {
             case "PRINT":
                 Debug.Log(EvaluateExpression(tokens));
                 break;
             case "IF":
                 int operand1 = EvaluateExpression(tokens);
-                String relop = tokens.Pop().GetValue();
+                String relop = tokens.Dequeue().GetValue();
                 int operand2 = EvaluateExpression(tokens);
 
                 bool result = false;
@@ -134,9 +137,18 @@ public class Interpreter : MonoBehaviour {
                 break;
 
             case "LET":
-                String variable = tokens.Pop().GetValue();
-                Debug.Assert(tokens.Pop().GetValue().Equals("="));
+                String variable = tokens.Dequeue().GetValue();
+                Debug.Assert(tokens.Dequeue().GetValue().Equals("="));
                 variables[variable] = EvaluateExpression(tokens);
+                break;
+
+            case "LINE":
+                int x1 = EvaluateExpression(tokens);
+                int y1 = EvaluateExpression(tokens);
+                int x2 = EvaluateExpression(tokens);
+                int y2 = EvaluateExpression(tokens);
+
+                display.DrawLine(x1, y1, x2, y2, Color.red);
                 break;
         }
     }
@@ -146,7 +158,9 @@ public class Interpreter : MonoBehaviour {
         lines = new SortedList<int, string>();
         variables = new Dictionary<string, int>();
         parser = new Parser();
-        ExtractLabels("10 LET X = 1\n20 PRINT X\n30 LET X = X * 2\n40 IF X < 10 GOTO 20");
+        //ExtractLabels("10 LET X = 1\n20 PRINT X\n30 LET X = X * 2\n40 IF X < 10 GOTO 20");
+        String code = Resources.Load<TextAsset>("test").ToString();
+        ExtractLabels(code);
     }
 
     void FixedUpdate() {

@@ -15,11 +15,7 @@ namespace BASIC.Tokenization {
         public static readonly TokenType L_PAREN = new TokenType(@"^\(");
         public static readonly TokenType R_PAREN = new TokenType(@"^\)");
         public static readonly TokenType FUNC = new TokenType("^[A-Z][A-Z]+");
-
         
-
-        
-
         public static readonly TokenType[] tokenTypes = {
             L_PAREN,
             R_PAREN,
@@ -34,8 +30,8 @@ namespace BASIC.Tokenization {
             return tokenType.Match(input);
         }
 
-        public static List<Token> Tokenize(String input) {
-            List<Token> tokens = new List<Token>();
+        public static Queue<Token> Tokenize(String input) {
+            Queue<Token> tokens = new Queue<Token>();
             while (input != "") {
                 bool matched = false;
                 input = input.TrimStart(' ');
@@ -45,7 +41,7 @@ namespace BASIC.Tokenization {
 
                     if (match.Success) {
                         //Debug.Log("2: " + match.Value);
-                        tokens.Add(new Token(tokenTypes[i], match.Value));
+                        tokens.Enqueue(new Token(tokenTypes[i], match.Value));
                         input = input.Substring(match.Length);
                         matched = true;
                         break;

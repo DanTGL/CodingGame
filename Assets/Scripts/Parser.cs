@@ -14,10 +14,9 @@ namespace BASIC {
 
         
 
-        public Stack<Token> ParseLine(String line) {
-            List<Token> tokenList = Tokenizer.Tokenize(line);
-            tokenList.Reverse();
-            Stack<Token> tokenStack = new Stack<Token>(tokenList);
+        public Queue<Token> ParseLine(String line) {
+            Queue<Token> tokenQueue = Tokenizer.Tokenize(line);
+            //Stack<Token> tokenStack = new Stack<Token>(tokenList);
             
             /*if (tokens.Peek().GetTokenType() == Tokenizer.NUMBER) {
                 tokens.Pop();
@@ -25,17 +24,13 @@ namespace BASIC {
 
             //ParseStatement(tokenStack);
 
-            return tokenStack;
+            return tokenQueue;
         }
 
         
 
-        public static int ParseExpression(Stack<Token> tokens) {
-            return int.Parse(tokens.Pop().GetValue());
-        }
-
-        public void ParseNumber() {
-
+        public static int ParseExpression(Queue<Token> tokens) {
+            return int.Parse(tokens.Dequeue().GetValue());
         }
 
     }
