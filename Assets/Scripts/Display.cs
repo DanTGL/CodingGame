@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Display : MonoBehaviour {
 
-    public Texture2D texture;
+    private Texture2D texture;
 
     [SerializeField]
     private Vector2Int pos;
@@ -38,6 +38,11 @@ public class Display : MonoBehaviour {
                 y1 += signY;
             }
         }
+        texture.Apply();
+    }
+
+    public void PlotPixel(int x, int y, Color color) {
+        texture.SetPixel(x, y, color);
         texture.Apply();
     }
 

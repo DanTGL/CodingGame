@@ -66,6 +66,8 @@ public class Interpreter : MonoBehaviour {
 
                 while (GetPrecedence(lookahead.GetValue()) > GetPrecedence(op)) {
                     rhs = EvaluateExpression1(tokens, rhs, min_precedence + 1);
+
+                    if (tokens.Count == 0) break;
                     lookahead = tokens.Peek();
                 }
             }
@@ -150,6 +152,13 @@ public class Interpreter : MonoBehaviour {
 
                 display.DrawLine(x1, y1, x2, y2, Color.red);
                 break;
+            
+            case "PLOT":
+                int x = EvaluateExpression(tokens);
+                int y = EvaluateExpression(tokens);
+
+                display.PlotPixel(x, y, Color.blue);
+                break;
         }
     }
 
@@ -159,7 +168,7 @@ public class Interpreter : MonoBehaviour {
         variables = new Dictionary<string, int>();
         parser = new Parser();
         //ExtractLabels("10 LET X = 1\n20 PRINT X\n30 LET X = X * 2\n40 IF X < 10 GOTO 20");
-        String code = Resources.Load<TextAsset>("test").ToString();
+        String code = Resources.Load<TextAsset>("test2").ToString();
         ExtractLabels(code);
     }
 
