@@ -311,7 +311,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   curLine: 0
-  monitor: {fileID: 963194230}
+  display: {fileID: 963194230}
 --- !u!114 &963194230
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -324,6 +324,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e09476d9108cd314aa21e7a5a69ac196, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  texture: {fileID: 0}
   pos: {x: 100, y: 50}
   resolution: {x: 500, y: 500}
