@@ -14,12 +14,14 @@ namespace BASIC.Tokenization {
         public static readonly TokenType BINOP = new TokenType(@"^(\+|-|\*|/|ε)");
         public static readonly TokenType L_PAREN = new TokenType(@"^\(");
         public static readonly TokenType R_PAREN = new TokenType(@"^\)");
-        public static readonly TokenType FUNC = new TokenType("^[A-Z][A-Z]+");
+        public static readonly TokenType FUNC = new TokenType(@"^[A-Z][A-Z]+\(");
+        public static readonly TokenType CMD = new TokenType("^[A-Z][A-Z]+");
         
         public static readonly TokenType[] tokenTypes = {
             L_PAREN,
             R_PAREN,
             FUNC,
+            CMD,
             VAR,
             NUMBER,
             RELOP,

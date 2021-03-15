@@ -32,10 +32,25 @@ public class Interpreter : MonoBehaviour {
 
         return -1;
     }
+
+    public int EvaluateFunction(Token func, Queue<Token> tokens) {
+        int result = 0;
+        switch (func.GetValue()) {
+            case "RND(":
+                int arg = EvaluateExpression(tokens);
+                result = UnityEngine.Random.Range(0, arg);
+                break;
+        }
+
+        tokens.Dequeue();
+        return result;
+    }
     
     public int EvaluatePrimary(Queue<Token> tokens) {
         Token token = tokens.Dequeue();
-        if (token.GetTokenType().Equals(Tokenizer.L_PAREN)) {
+        if (token.GetTokenType().Equals(Tokenizer.FUNC)) {
+            return EvaluateFunction(token, tokens);
+        } else if (token.GetTokenType().Equals(Tokenizer.L_PAREN)) {
             int result = EvaluateExpression(tokens);
             tokens.Dequeue();
             return result;
