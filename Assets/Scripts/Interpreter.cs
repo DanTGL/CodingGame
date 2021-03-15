@@ -19,6 +19,8 @@ public class Interpreter : MonoBehaviour {
 
     public Dictionary<String, int> variables;
 
+    public int linesPerUpdate = 3;
+
     public static int GetPrecedence(String op) {
         switch (op) {
             case "/":
@@ -187,17 +189,21 @@ public class Interpreter : MonoBehaviour {
         variables = new Dictionary<string, int>();
         parser = new Parser();
         //ExtractLabels("10 LET X = 1\n20 PRINT X\n30 LET X = X * 2\n40 IF X < 10 GOTO 20");
-        String code = Resources.Load<TextAsset>("test").ToString();
+        String code = Resources.Load<TextAsset>("random_lines").ToString();
         ExtractLabels(code);
     }
 
     void FixedUpdate() {
-        if (curLine < lines.Count) {
+
+        int i = linesPerUpdate;
+        while (curLine < lines.Count && i >= 0) {
             int key = lines.Keys[curLine];
             String statement = lines.Values[curLine];
             ExecuteStatement(parser.ParseLine(statement));
 
             curLine++;
+
+            i--;
         }
     }
 
