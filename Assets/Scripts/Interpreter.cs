@@ -165,14 +165,18 @@ public class Interpreter : MonoBehaviour {
                 int x2 = EvaluateExpression(tokens);
                 int y2 = EvaluateExpression(tokens);
 
-                display.DrawLine(x1, y1, x2, y2, Color.red);
+                int c = EvaluateExpression(tokens);
+
+                display.DrawLine(x1, y1, x2, y2, c);
                 break;
             
             case "PLOT":
                 int x = EvaluateExpression(tokens);
                 int y = EvaluateExpression(tokens);
 
-                display.PlotPixel(x, y, Color.blue);
+                int col = EvaluateExpression(tokens);
+
+                display.PlotPixel(x, y, col);
                 break;
         }
     }
@@ -183,7 +187,7 @@ public class Interpreter : MonoBehaviour {
         variables = new Dictionary<string, int>();
         parser = new Parser();
         //ExtractLabels("10 LET X = 1\n20 PRINT X\n30 LET X = X * 2\n40 IF X < 10 GOTO 20");
-        String code = Resources.Load<TextAsset>("test2").ToString();
+        String code = Resources.Load<TextAsset>("test").ToString();
         ExtractLabels(code);
     }
 
