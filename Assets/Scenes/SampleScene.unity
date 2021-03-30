@@ -312,7 +312,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   curLine: 0
   display: {fileID: 963194230}
-  linesPerUpdate: 15
+  linesPerUpdate: 1
 --- !u!114 &963194230
 MonoBehaviour:
   m_ObjectHideFlags: 0

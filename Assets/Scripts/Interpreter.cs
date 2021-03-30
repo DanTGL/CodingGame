@@ -9,7 +9,7 @@ using BASIC.Tokenization;
 
 public class Interpreter : MonoBehaviour {
 
-    public SortedList<int, String> lines;
+    public SortedList<int, Token[]> lines;
     public int curLine = 0;
 
     [SerializeField]
@@ -111,15 +111,7 @@ public class Interpreter : MonoBehaviour {
         return lhs;
     }
 
-    void ExtractLabels(String code) {
-        String line = null;
-        StringReader reader = new StringReader(code);
-        while ((line = reader.ReadLine()) != null) {
-            Debug.Log("Line: " + line);
-            String[] splitLine = line.Split(new char[] {' '}, 2);
-            lines.Add(int.Parse(splitLine[0]), splitLine[1]);
-        }
-    }
+
 
     public void ExecuteStatement(Queue<Token> tokens) {
         //Debug.Log("test: " + tokens.Peek().GetValue());
@@ -185,12 +177,11 @@ public class Interpreter : MonoBehaviour {
 
     // Start is called before the first frame update
     void Start() {
-        lines = new SortedList<int, string>();
         variables = new Dictionary<string, int>();
         parser = new Parser();
         //ExtractLabels("10 LET X = 1\n20 PRINT X\n30 LET X = X * 2\n40 IF X < 10 GOTO 20");
         String code = Resources.Load<TextAsset>("random_lines").ToString();
-        ExtractLabels(code);
+        lines = parser.ParseCode(code);
     }
 
     void FixedUpdate() {
@@ -198,8 +189,8 @@ public class Interpreter : MonoBehaviour {
         int i = linesPerUpdate;
         while (curLine < lines.Count && i >= 0) {
             int key = lines.Keys[curLine];
-            String statement = lines.Values[curLine];
-            ExecuteStatement(parser.ParseLine(statement));
+            //String statement = lines.Values[curLine];
+            ExecuteStatement(new Queue<Token>(lines[key]));
 
             curLine++;
 
